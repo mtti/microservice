@@ -1,1 +1,1 @@
-*@mtti/microservice* is a minimalistic, modular microservice framework.
+**@mtti/microservice** is a minimalistic, modular microservice framework.
