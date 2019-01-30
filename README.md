@@ -43,7 +43,7 @@ new Microservice('my-microservice')
 The `Microservice` class has four methods of interest:
 * `init()` adds an *initializer*, a function callback which gets executed when the microservice starts.
 * `configure()` adds a *configurator*, a function which sets up configuration options used by the plugin's initializer. Configurators should only modify the `config` field of the service. They get executed before any initializers.
-* `user()` adds a *plugin*, usually an imported module containing both a configurator and an initializer.
+* `use()` adds a *plugin*, usually an imported module containing both a configurator and an initializer.
 * `start()` starts the microservice, returning a promise. First, all configurators and then all initializers are executed in the order they were added. After they've all run, the promise is resolved.
 
 A configurator can be:
