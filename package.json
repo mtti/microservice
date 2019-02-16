@@ -1,6 +1,6 @@
 {
   "name": "@mtti/microservice",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Minimalistic modular microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
     "lint:fix": "eslint --fix \"src/**/*.js\" \"test/**/*.js\"",
     "mocha": "mocha test/setup.js \"src/**/*.spec.js\"",
-    "test": "npm run mocha && npm run lint"
+    "test": "jest"
   },
   "dependencies": {
     "async": "2.6.1",
@@ -18,13 +18,10 @@
     "winston": "3.2.1"
   },
   "devDependencies": {
-    "chai": "4.1.2",
-    "chai-subset": "1.6.0",
     "eslint": "4.16.0",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
-    "mocha": "5.0.0",
-    "sinon": "4.2.1"
+    "jest": "24.1.0"
   },
   "files": [
     "lib"
