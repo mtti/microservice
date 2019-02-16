@@ -1,8 +1,6 @@
 [![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice)
 
-While creating a number of Node.js microservices for an MVP web app I was building, I noticed I was spending time copy-pasting boilerplate code to each new microservice. Code for things like connecting to a message queue, connecting to databases, initializing database models, that sort of thing.
-
-This felt like a waste of my time, so I created this microframework to help me modularize all the boilerplate code so I could just import it instead of copy-pasting.
+Simple microservice framework designed to reduce the amount of boilerplate required when creating several similar Node.js daemons. This is accomplished by establishing some simple conventions on how different components of an application are configured and initialized. This allows commonly shared components (connections to databases, message queues etc.) to be implemented as reusable plugin modules.
 
 ## Installation
 
@@ -10,9 +8,9 @@ This felt like a waste of my time, so I created this microframework to help me m
 npm install @mtti/microservice
 ```
 
-## Usage
+## Usage example
 
-A fairly typical use case for me would look something like this:
+As a summary, you create a new `Microservice` instance and call its `.use()`, `.config()` and `.init()` methods to add plugins, configuration options and initialization callbacks, respectively. Configuration options can be provided as a string path to a JSON file, a one-off key and value, an object with multiple options at once or a callback which receives the service's existing configuration as a parameter. You can also call `.use()` which takes a plugin. More about plugins further down.
 
 ```JavaScript
 // app.js
@@ -30,8 +28,8 @@ new Microservice('my-microservice')
       throw new Error('SOME_ENV not set');
     }
   })
-  .init((service) => {
-    const actualService = new ActualService(service.natsClient);
+  .init(({ natsClient }) => {
+    const actualService = new ActualService(natsClient);
     actualService.start();
   })
   .start()
@@ -58,7 +56,7 @@ Both initializers and configurator functions can work asynchronously by returnin
 
 ## Plugins
 
-The `use()` method expects a plugin object. A plugin object is a regular JavaScript object which can contain a configurator and an initializer, as members named `configure` and `init`. Both are optional. Any other keys will be ignored right now, but you should consider them reserved.
+The `use()` method expects a plugin object. A plugin object is a regular JavaScript object which can contain a configurator and an initializer, as members named `config` and `init`. Both are optional. Any other keys will be ignored right now, but you should consider them reserved.
 
 In practice, a plugin module might look something like this:
 
@@ -66,10 +64,10 @@ In practice, a plugin module might look something like this:
 // plugin.js
 
 module.exports = {
-    configure: (config) => {
+    config: (config) => {
         // add code here
     },
-    init: (service) => {
+    init: (context) => {
         // add code here too
     },
 };
