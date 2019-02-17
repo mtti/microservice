@@ -25,5 +25,9 @@
   },
   "files": [
     "lib"
-  ]
+  ],
+
+  "jest": {
+    "collectCoverage": true
+  }
 }
