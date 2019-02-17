@@ -13,7 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "lodash": "4.17.11",
     "winston": "3.2.1"
   },
   "devDependencies": {
