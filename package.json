@@ -8,10 +8,10 @@
   "repository": "github:mtti/node-microservice",
   "main": "lib/index.js",
   "scripts": {
-    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "lint:fix": "eslint --fix \"src/**/*.js\" \"test/**/*.js\"",
-    "mocha": "mocha test/setup.js \"src/**/*.spec.js\"",
-    "test": "jest"
+    "lint": "eslint \"lib/**/*.js\"",
+    "lint:fix": "eslint --fix \"lib/**/*.js\"",
+    "jest": "jest",
+    "test": "npm run lint && jest"
   },
   "dependencies": {
     "winston": "3.2.1"
