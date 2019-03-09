@@ -21,9 +21,12 @@ const ActualService = require('./service');
 
 new Microservice('my-microservice')
   .use(natsPlugin)
-  .configure((config) => {
+  .config((config) => {
     if (process.env.SOME_ENV) {
-      config.someOption = process.env.SOME_ENV;
+      return {
+          ...config,
+          someOption: process.env.SOME_ENV,
+      };
     } else {
       throw new Error('SOME_ENV not set');
     }
@@ -40,13 +43,13 @@ new Microservice('my-microservice')
 
 The `Microservice` class has four methods of interest:
 * `init()` adds an *initializer*, a function callback which gets executed when the microservice starts.
-* `configure()` adds a *configurator*, a function which sets up configuration options used by the plugin's initializer. Configurators should only modify the `config` field of the service. They get executed before any initializers.
+* `config()` adds a *configurator*, a function which sets up configuration options used by the plugin's initializer. They get executed before any initializers. Configurators receive an object containing the service's configuration options and should return a modified copy of it.
 * `use()` adds a *plugin*, usually an imported module containing both a configurator and an initializer.
 * `start()` starts the microservice, returning a promise. First, all configurators and then all initializers are executed in the order they were added. After they've all run, the promise is resolved.
 
 A configurator can be:
 
-* a function, in which case it will be executed and is passed the `config` object as a parameter
+* a function, in which case it will be executed and is passed the `config` object as a parameter and must return a modified copy of it if changes are made.
 * a string, which is assumed to be the path to a JSON file which will be loaded and merged into the `config` object
 * an object, which will be merged into the `config` object.
 
@@ -72,12 +75,6 @@ module.exports = {
     },
 };
 ```
-
-Some plugins I've written:
-
-* [@mtti/microservice-nats](https://github.com/mtti/node-microservice-nats) for connecting to [NATS](https://nats.io/).
-* [@mtti/microservice-sequelize](https://github.com/mtti/node-microservice-sequelize) for connecting to a relational database using the Sequelize ORM.
-* [@mtti/microservice-redis](https://github.com/mtti/node-microservice-redis) for connecting to Redis.
 
 ## License
 
