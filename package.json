@@ -1,7 +1,9 @@
 {
   "name": "@mtti/microservice",
-  "engines" : { "node" : ">=11.0.0" },
-  "version": "0.3.0",
+  "engines": {
+    "node": ">=11.0.0"
+  },
+  "version": "0.3.1",
   "description": "Minimalistic modular microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
