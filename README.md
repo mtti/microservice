@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice)
+[![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice) [![Build Status](https://travis-ci.org/mtti/node-microservice.svg?branch=master)](https://travis-ci.org/mtti/node-microservice)
 
 Simple microservice framework designed to reduce the amount of boilerplate required when creating several similar Node.js daemons. This is accomplished by establishing some simple conventions on how different components of an application are configured and initialized. This allows commonly shared components (connections to databases, message queues etc.) to be implemented as reusable plugin modules.
 
