@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const Microservice = require('./microservice');
+import Microservice = require('./microservice');
 
-module.exports = Microservice;
+export = Microservice;

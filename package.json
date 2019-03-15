@@ -8,12 +8,14 @@
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
   "repository": "github:mtti/node-microservice",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "lint": "eslint \"lib/**/*.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\"",
     "jest": "jest",
-    "test": "npm run lint && jest"
+    "test": "npm run lint && jest",
+    "tsc": "tsc"
   },
   "dependencies": {
     "winston": "3.2.1"
@@ -22,7 +24,8 @@
     "eslint": "5.15.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.16.0",
-    "jest": "24.3.1"
+    "jest": "24.3.1",
+    "typescript": "3.3.3333"
   },
   "files": [
     "lib"
