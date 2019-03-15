@@ -88,9 +88,9 @@ class Microservice {
   }
 
   /** Add a configurator. */
-  config(key:any, value?:string):Microservice {
+  config(key:Configurator|string|Config, value?:string):Microservice {
     if (typeof (key) === 'function') {
-      this._configurationCallbacks.push(key);
+      this._configurationCallbacks.push(key as Configurator);
     } else if (typeof (key) === 'string') {
       if (value) {
         this.config(Microservice._createPairConfigurator(key, value));
