@@ -1,4 +1,4 @@
 {
   "testPathIgnorePatterns": ["/node_modules/", "<rootDir>/dist/"],
-  "testMatch": [ "**/?(*.)+(spec|test).js" ]
+  "testMatch": [ "**/?(*.)+(spec|test).js", "integration-tests/**/?(*.)+(spec|test).js" ]
 }
