@@ -110,12 +110,12 @@ export class Microservice {
   }
 
   /** Start the microservice. */
-  public async start(): Promise<Microservice> {
+  public async start(): Promise<IContext> {
     try {
       await this._executeConfigurators();
       await this._executeInitializers();
       this._context.log.info('Started');
-      return this;
+      return this._context;
     } catch (err) {
       this._context.log.error(err);
       throw err;

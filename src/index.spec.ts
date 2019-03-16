@@ -17,7 +17,7 @@ limitations under the License.
 /* tslint:disable:no-string-literal */
 
 import fs = require('fs');
-import { Configurator, IConfig, Initializer, Microservice } from '.';
+import { Configurator, IConfig, IContext, Initializer, Microservice } from '.';
 
 jest.mock('fs');
 
@@ -106,7 +106,15 @@ describe('Microservice', () => {
   });
 
   describe('start()', () => {
-    // TODO
+    let result: IContext;
+
+    beforeEach(async () => {
+      result = await service.start();
+    });
+
+    it('returns the context', () => {
+      expect(result).toBe(service['_context']);
+    });
   });
 
   describe('_createFileConfigurator() result', () => {
