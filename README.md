@@ -5,7 +5,7 @@ Simple microservice framework designed to reduce the amount of boilerplate requi
 ## Installation
 
 ```
-npm install @mtti/microservice
+npm install --save @mtti/microservice
 ```
 
 ## Usage example
@@ -15,30 +15,28 @@ As a summary, you create a new `Microservice` instance and call its `.use()`, `.
 ```JavaScript
 // app.js
 
-const Microservice = require('@mtti/microservice');
-const natsPlugin = require('@mtti/microservice-nats');
-const ActualService = require('./service');
+const express = require('express');
+const { Microservice } = require('@mtti/microservice');
 
-new Microservice('my-microservice')
-  .use(natsPlugin)
-  .config((config) => {
-    if (process.env.SOME_ENV) {
-      return {
-          ...config,
-          someOption: process.env.SOME_ENV,
-      };
-    } else {
-      throw new Error('SOME_ENV not set');
-    }
+new Microservice('express-example')
+  .config(async (config) => {
+    return {
+      ...config,
+      expressPort: process.env.PORT || 8080,
+    };
   })
-  .init(({ natsClient }) => {
-    const actualService = new ActualService(natsClient);
-    actualService.start();
+  .init(async (context) => {
+    const app = express();
+    app.get('/', (req, res) => {
+      res.send('Hello world');
+    });
+    app.listen(context.config.expressPort);
   })
   .start()
-    .catch((err) => {
-        process.exit(1);
+    .then((context) => {
+      context.log.info(`Listening on ${context.config.expressPort}`);
     });
+
 ```
 
 The `Microservice` class has four methods of interest:
