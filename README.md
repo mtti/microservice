@@ -10,6 +10,8 @@ npm install --save @mtti/microservice
 
 ## Usage example
 
+For more examples, see the [mtti/node-microservice-examples](https://github.com/mtti/node-microservice-examples) repository.
+
 As a summary, you create a new `Microservice` instance and call its `.use()`, `.config()` and `.init()` methods to add plugins, configuration options and initialization callbacks, respectively. Configuration options can be provided as a string path to a JSON file, a one-off key and value, an object with multiple options at once or a callback which receives the service's existing configuration as a parameter. You can also call `.use()` which takes a plugin. More about plugins further down.
 
 ```JavaScript
