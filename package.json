@@ -1,7 +1,7 @@
 {
   "name": "@mtti/microservice",
   "engines": {
-    "node": ">=11.0.0"
+    "node": ">=8.10.0"
   },
   "version": "0.3.1",
   "description": "Minimalistic modular microservice framework",
@@ -10,24 +10,29 @@
   "repository": "github:mtti/node-microservice",
   "main": "dist/index.js",
   "scripts": {
+    "setup": "npm install",
     "build": "tsc",
-    "lint": "eslint \"src/**/*.test.js\"",
-    "lint:fix": "eslint --fix \"lib/**/*.js\"",
+    "test": "npm run lint && npm run jest:ts && npm run jest:js",
+    "lint": "npm run lint:ts && npm run lint:js",
+    "lint:js": "eslint \"src/**/*.test.js\"",
+    "lint:ts": "tslint 'src/**/*.ts'",
     "jest:js": "jest --config ./jest.config.js.json",
     "jest:ts": "jest --config ./jest.config.ts.json",
-    "test": "npm run jest:ts && npm run jest:js",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "tslint": "tslint",
+    "prepublish": "npm run build && npm run test"
   },
   "dependencies": {
     "winston": "3.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.11",
+    "@types/jest": "24.0.11",
     "eslint": "5.15.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.16.0",
     "jest": "24.3.1",
-    "ts-jest": "^24.0.0",
+    "ts-jest": "24.0.0",
+    "tslint": "5.14.0",
     "typescript": "3.3.3333"
   },
   "files": [
