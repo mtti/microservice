@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=8.10.0"
   },
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Minimalistic modular microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
