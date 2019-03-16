@@ -15,7 +15,7 @@
     "lint:fix": "eslint --fix \"lib/**/*.js\"",
     "jest:js": "jest --config ./jest.config.js.json",
     "jest:ts": "jest --config ./jest.config.ts.json",
-    "test": "npm run lint && jest",
+    "test": "npm run jest:ts && npm run jest:js",
     "tsc": "tsc"
   },
   "dependencies": {

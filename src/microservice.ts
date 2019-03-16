@@ -18,25 +18,25 @@ import fs = require('fs');
 import path = require('path');
 import winston = require('winston');
 
-type Configurator = (config: Config) => Promise<Config>;
+export type Configurator = (config: Config) => Promise<Config>;
 
-type Initializer = (context: Context) => Promise<void>;
+export type Initializer = (context: Context) => Promise<void>;
 
-interface Config {
+export interface Config {
   [propName: string]: any,
 }
 
-interface Plugin {
+export interface Plugin {
   config?: Configurator,
   init?: Initializer,
 }
 
-interface Context {
+export interface Context {
   config: Config,
   [propName: string]: any,
 }
 
-class Microservice {
+export class Microservice {
   /** Create a configuration callback which adds all options from an object. */
   private static _createObjectConfigurator(options:Config) {
     return async (config:Config) => ({ ...config, ...options });
@@ -173,5 +173,3 @@ class Microservice {
     return this._initializationCallbacks.reduce(reducer, Promise.resolve());
   }
 }
-
-export { Microservice, Configurator, Initializer, Config, Context, Plugin };
