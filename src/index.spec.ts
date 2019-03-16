@@ -1,26 +1,28 @@
 /*
 Copyright 2018-2019 Matti Hiltunen
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the 'License');
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+distributed under the License is distributed on an 'AS IS' BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs');
-const Microservice = require('./microservice');
+/* tslint:disable:no-string-literal */
+
+import fs = require('fs');
+import { Configurator, IConfig, Initializer, Microservice } from '.';
 
 jest.mock('fs');
 
 describe('Microservice', () => {
-  let service;
+  let service: Microservice;
 
   beforeEach(() => {
     service = new Microservice('test-service');
@@ -32,7 +34,7 @@ describe('Microservice', () => {
 
   describe('config()', () => {
     describe('called with a function', () => {
-      let callback;
+      let callback: Configurator;
 
       beforeEach(() => {
         callback = jest.fn();
@@ -40,15 +42,15 @@ describe('Microservice', () => {
       });
 
       test('has exactly one configurator', () => {
-        expect(service._configurationCallbacks.length).toBe(1);
+        expect(service['_configurationCallbacks'].length).toBe(1);
       });
 
       test('added callback as configurator', () => {
-        expect(service._configurationCallbacks[0]).toBe(callback);
+        expect(service['_configurationCallbacks'][0]).toBe(callback);
       });
 
       test('callback was not called', () => {
-        expect(callback.mock.calls.length).toBe(0);
+        expect(callback).not.toHaveBeenCalled();
       });
     });
 
@@ -58,7 +60,7 @@ describe('Microservice', () => {
       });
 
       test('there is exactly one configurator', () => {
-        expect(service._configurationCallbacks.length).toBe(1);
+        expect(service['_configurationCallbacks'].length).toBe(1);
       });
     });
 
@@ -75,14 +77,14 @@ describe('Microservice', () => {
       });
 
       test('there is exactly one configurator', () => {
-        expect(service._configurationCallbacks.length).toBe(1);
+        expect(service['_configurationCallbacks'].length).toBe(1);
       });
     });
   });
 
   describe('init()', () => {
     describe('called with a function', () => {
-      let callback;
+      let callback: Initializer;
 
       beforeEach(() => {
         callback = jest.fn();
@@ -90,15 +92,15 @@ describe('Microservice', () => {
       });
 
       test('has one initialization callback', () => {
-        expect(service._initializationCallbacks.length).toBe(1);
+        expect(service['_initializationCallbacks'].length).toBe(1);
       });
 
       test('added the callback', () => {
-        expect(service._initializationCallbacks[0]).toBe(callback);
+        expect(service['_initializationCallbacks'][0]).toBe(callback);
       });
 
       test('callback was not called', () => {
-        expect(callback.mock.calls.length).toBe(0);
+        expect(callback).not.toHaveBeenCalled();
       });
     });
   });
@@ -108,6 +110,8 @@ describe('Microservice', () => {
   });
 
   describe('_createFileConfigurator() result', () => {
+    const mockReadFileSync: jest.Mock = fs.readFileSync as jest.Mock;
+
     const baseConfig = {
       firstKey: 'oldFirstValue',
       secondKey: 'oldSecondValue',
@@ -118,23 +122,23 @@ describe('Microservice', () => {
       thirdKey: 'newThirdValue',
     };
 
-    let result;
-    let error;
+    let result: IConfig;
+    let error: Error | null;
 
     beforeEach(() => {
-      result = null;
+      result = {};
       error = null;
-      fs.readFileSync.mockReturnValue(JSON.stringify(configJson));
+      mockReadFileSync.mockReturnValue(JSON.stringify(configJson));
     });
 
     afterEach(() => {
-      fs.readFileSync.mockReset();
+      mockReadFileSync.mockReset();
     });
 
     describe('called with path to non-JSON file', () => {
       beforeEach(async () => {
         error = null;
-        const cb = service._createFileConfigurator('/path/to/some.txt');
+        const cb = service['_createFileConfigurator']('/path/to/some.txt');
         try {
           result = await cb(baseConfig);
         } catch (err) {
@@ -143,7 +147,7 @@ describe('Microservice', () => {
       });
 
       it('does not call fs.readFileSync', () => {
-        expect(fs.readFileSync.mock.calls.length).toBe(0);
+        expect(fs.readFileSync).not.toHaveBeenCalled();
       });
 
       it('throws an exception', () => {
@@ -153,12 +157,12 @@ describe('Microservice', () => {
 
     describe('called with path to JSON file', () => {
       beforeEach(async () => {
-        const cb = service._createFileConfigurator('/path/to/config.json');
+        const cb = service['_createFileConfigurator']('/path/to/config.json');
         result = await cb(baseConfig);
       });
 
       it('calls fs.readFileSync with file path', () => {
-        expect(fs.readFileSync).toHaveBeenCalledWith('/path/to/config.json');
+        expect(fs.readFileSync).toHaveBeenCalledWith('/path/to/config.json', 'utf8');
       });
 
       it('returns new object', () => {
@@ -180,14 +184,14 @@ describe('Microservice', () => {
   });
 
   describe('_executeConfigurator()', () => {
-    let callback;
-    let oldConfig;
-    let newConfig;
-    let error;
+    let callback: Configurator;
+    let oldConfig: IConfig;
+    let newConfig: IConfig;
+    let error: Error;
 
     beforeEach(() => {
-      oldConfig = service._context.config;
-      error = null;
+      oldConfig = service['_context'].config;
+      error = new Error('');
     });
 
     describe('when configurator resolves correctly', () => {
@@ -198,18 +202,18 @@ describe('Microservice', () => {
         });
       });
 
-      beforeEach(() => service._executeConfigurator(callback));
+      beforeEach(() => service['_executeConfigurator'](callback));
 
       test('called callback exactly once', () => {
-        expect(callback.mock.calls.length).toBe(1);
+        expect(callback).toHaveBeenCalledTimes(1);
       });
 
       test('sets config to the object resolved from configurator', () => {
-        expect(service._context.config).toBe(newConfig);
+        expect(service['_context'].config).toBe(newConfig);
       });
 
       test('option value set by the configurator is correct', () => {
-        expect(service._context.config.someKey).toEqual('someValue');
+        expect(service['_context'].config.someKey).toEqual('someValue');
       });
     });
 
@@ -222,14 +226,14 @@ describe('Microservice', () => {
 
       beforeEach(async () => {
         try {
-          await service._executeConfigurator(callback);
+          await service['_executeConfigurator'](callback);
         } catch (err) {
           error = err;
         }
       });
 
       test('called callback exactly once', () => {
-        expect(callback.mock.calls.length).toBe(1);
+        expect(callback).toHaveBeenCalledTimes(1);
       });
 
       test('throws the same error', () => {
@@ -237,45 +241,19 @@ describe('Microservice', () => {
       });
 
       test('does not alter the config object', () => {
-        expect(service._context.config).toBe(oldConfig);
-      });
-    });
-
-    describe('when configurator returns a non-promise', () => {
-      beforeEach(() => {
-        callback = jest.fn(() => 'not a promise');
-      });
-
-      beforeEach(async () => {
-        try {
-          await service._executeConfigurator(callback);
-        } catch (err) {
-          error = err;
-        }
-      });
-
-      test('called callback exactly once', () => {
-        expect(callback.mock.calls.length).toBe(1);
-      });
-
-      test('throws an error', () => {
-        expect(error.message).toEqual('Configuration callback must return a promise');
-      });
-
-      test('does not alter the config object', () => {
-        expect(service._context.config).toBe(oldConfig);
+        expect(service['_context'].config).toBe(oldConfig);
       });
     });
   });
 
   describe('_executeConfigurators()', () => {
-    let callbacks;
-    let error;
+    let callbacks: Configurator[];
+    let error: Error | null;
 
     beforeEach(() => {
       error = null;
 
-      const createConfigurator = result => async config => ({ ...config, ...result });
+      const createConfigurator = (result: IConfig) => async (config: IConfig) => ({ ...config, ...result });
       callbacks = [
         jest.fn(createConfigurator({ first: 'firstValue' })),
         jest.fn(createConfigurator({ second: 'secondValue' })),
@@ -285,24 +263,24 @@ describe('Microservice', () => {
 
     describe('when all configurators resolve correctly', () => {
       beforeEach(() => {
-        callbacks.forEach(callback => service.config(callback));
-        return service._executeConfigurators();
+        callbacks.forEach((callback) => service.config(callback));
+        return service['_executeConfigurators']();
       });
 
       test('each configurator was called once', () => {
-        callbacks.forEach(callback => expect(callback.mock.calls.length).toBe(1));
+        callbacks.forEach((callback) => expect(callback).toHaveBeenCalledTimes(1));
       });
 
       test('first option has its initial value', () => {
-        expect(service._context.config.first).toEqual('firstValue');
+        expect(service['_context'].config.first).toEqual('firstValue');
       });
 
       test('second option has an overridden value', () => {
-        expect(service._context.config.second).toEqual('overriddenValue');
+        expect(service['_context'].config.second).toEqual('overriddenValue');
       });
 
       test('third option has its initial value', () => {
-        expect(service._context.config.third).toEqual('thirdValue');
+        expect(service['_context'].config.third).toEqual('thirdValue');
       });
     });
 
@@ -314,9 +292,9 @@ describe('Microservice', () => {
       });
 
       beforeEach(async () => {
-        callbacks.forEach(callback => service.config(callback));
+        callbacks.forEach((callback) => service.config(callback));
         try {
-          await service._executeConfigurators();
+          await service['_executeConfigurators']();
         } catch (err) {
           error = err;
         }
@@ -327,26 +305,26 @@ describe('Microservice', () => {
       });
 
       test('does not call the last configurator', () => {
-        expect(callbacks[2].mock.calls.length).toBe(0);
+        expect(callbacks[2]).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('_executeInitializer()', () => {
     const fakePromise = { then: () => null };
-    let callback;
-    let result;
-    let error;
+    let callback: Initializer;
+    let result: Promise<void>;
+    let error: Error;
 
     beforeEach(() => {
-      result = null;
-      error = null;
+      result = Promise.reject();
+      error = new Error('');
     });
 
     describe('initializer returns a promise-like object', () => {
       beforeEach(() => {
         callback = jest.fn().mockReturnValue(fakePromise);
-        result = service._executeInitializer(callback);
+        result = service['_executeInitializer'](callback);
       });
 
       it('calls the initializer', () => {
@@ -362,7 +340,7 @@ describe('Microservice', () => {
       beforeEach(() => {
         callback = jest.fn().mockReturnValue('not a promise');
         try {
-          result = service._executeInitializer(callback);
+          result = service['_executeInitializer'](callback);
         } catch (err) {
           error = err;
         }
@@ -379,21 +357,21 @@ describe('Microservice', () => {
   });
 
   describe('_executeInitializers()', () => {
-    let callbacks;
+    let callbacks: Initializer[];
 
     beforeEach(() => {
       callbacks = [
-        jest.fn(async () => null),
-        jest.fn(async () => null),
-        jest.fn(async () => null),
+        jest.fn(() => Promise.resolve()),
+        jest.fn(() => Promise.resolve()),
+        jest.fn(() => Promise.resolve()),
       ];
-      callbacks.forEach(callback => service.init(callback));
+      callbacks.forEach((callback) => service.init(callback));
     });
 
-    beforeEach(() => service._executeInitializers());
+    beforeEach(() => service['_executeInitializers']());
 
     test('each initializer was called once', () => {
-      callbacks.forEach(callback => expect(callback.mock.calls.length).toBe(1));
+      callbacks.forEach((callback) => expect(callback).toHaveBeenCalledTimes(1));
     });
   });
 });

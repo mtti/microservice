@@ -14,22 +14,45 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs');
-const path = require('path');
-const winston = require('winston');
+import fs = require('fs');
+import path = require('path');
+import winston = require('winston');
 
-class Microservice {
+export type Configurator = (config: IConfig) => Promise<IConfig>;
+
+export type Initializer = (context: IContext) => Promise<void>;
+
+export interface IConfig {
+  [propName: string]: any;
+}
+
+export interface IPlugin {
+  config?: Configurator;
+  init?: Initializer;
+}
+
+export interface IContext {
+  config: IConfig;
+  [propName: string]: any;
+}
+
+export class Microservice {
   /** Create a configuration callback which adds all options from an object. */
-  static _createObjectConfigurator(options) {
-    return async config => ({ ...config, ...options });
+  private static _createObjectConfigurator(options: IConfig) {
+    return async (config: IConfig) => ({ ...config, ...options });
   }
 
   /** Create a configuration callback which adds a single key-value pair. */
-  static _createPairConfigurator(key, value) {
-    return async config => ({ ...config, [key]: value });
+  private static _createPairConfigurator(key: string, value: any) {
+    return async (config: IConfig) => ({ ...config, [key]: value });
   }
 
-  constructor(name) {
+  public name: string;
+  private _configurationCallbacks: Configurator[];
+  private _initializationCallbacks: Initializer[];
+  private _context: IContext;
+
+  constructor(name: string) {
     this.name = name;
     this._configurationCallbacks = [];
     this._initializationCallbacks = [];
@@ -41,12 +64,12 @@ class Microservice {
     };
 
     this._context.log = winston.createLogger({
-      levels: winston.config.syslog.levels,
-      level: this._context.config.env === 'production' ? 'warning' : 'debug',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf(i => `${i.timestamp} ${i.level.toUpperCase()} ${i.message}`),
+        winston.format.printf((i: any) => `${i.timestamp} ${i.level.toUpperCase()} ${i.message}`),
       ),
+      level: this._context.config.env === 'production' ? 'warning' : 'debug',
+      levels: winston.config.syslog.levels,
       transports: [
         new winston.transports.Console(),
       ],
@@ -54,7 +77,7 @@ class Microservice {
   }
 
   /** Add a plugin. */
-  use(plugin) {
+  public use(plugin: IPlugin): Microservice {
     if (plugin.config) {
       this.config(plugin.config);
     }
@@ -65,9 +88,9 @@ class Microservice {
   }
 
   /** Add a configurator. */
-  config(key, value) {
+  public config(key: Configurator | string | IConfig, value?: string): Microservice {
     if (typeof (key) === 'function') {
-      this._configurationCallbacks.push(key);
+      this._configurationCallbacks.push(key as Configurator);
     } else if (typeof (key) === 'string') {
       if (value) {
         this.config(Microservice._createPairConfigurator(key, value));
@@ -81,13 +104,13 @@ class Microservice {
   }
 
   /** Add an initializer. */
-  init(cb) {
+  public init(cb: Initializer): Microservice {
     this._initializationCallbacks.push(cb);
     return this;
   }
 
   /** Start the microservice. */
-  async start() {
+  public async start(): Promise<Microservice> {
     try {
       await this._executeConfigurators();
       await this._executeInitializers();
@@ -100,12 +123,12 @@ class Microservice {
   }
 
   /** Create a configuration callback which loads options from a file. */
-  _createFileConfigurator(filename) {
-    return async (config) => {
+  private _createFileConfigurator(filename: string): Configurator {
+    return async (config: IConfig) => {
       const absolutePath = path.resolve(filename);
       let options;
       if (filename.endsWith('.json')) {
-        options = JSON.parse(fs.readFileSync(filename));
+        options = JSON.parse(fs.readFileSync(filename, 'utf8'));
         this._context.log.info(`Loaded JSON configuration from ${absolutePath}`);
       } else {
         throw new Error(`Unrecognized configuration file format (${absolutePath})`);
@@ -115,7 +138,7 @@ class Microservice {
   }
 
   /** Execute a single configuration callback. */
-  _executeConfigurator(callback) {
+  private _executeConfigurator(callback: Configurator): Promise<void> {
     const config = { ...this._context.config };
     const promise = callback(config);
 
@@ -130,12 +153,13 @@ class Microservice {
     });
   }
 
-  _executeConfigurators() {
-    const reducer = (promise, callback) => promise.then(() => this._executeConfigurator(callback));
+  private _executeConfigurators(): Promise<void> {
+    const reducer = (promise: Promise<void>, callback: Configurator) =>
+      promise.then(() => this._executeConfigurator(callback));
     return this._configurationCallbacks.reduce(reducer, Promise.resolve());
   }
 
-  _executeInitializer(callback) {
+  private _executeInitializer(callback: Initializer): Promise<void> {
     const promise = callback(this._context);
 
     if (!promise.then) {
@@ -145,10 +169,9 @@ class Microservice {
     return promise;
   }
 
-  _executeInitializers() {
-    const reducer = (promise, callback) => promise.then(() => this._executeInitializer(callback));
+  private _executeInitializers(): Promise<void> {
+    const reducer = (promise: Promise<void>, callback: Initializer) =>
+      promise.then(() => this._executeInitializer(callback));
     return this._initializationCallbacks.reduce(reducer, Promise.resolve());
   }
 }
-
-module.exports = Microservice;
