@@ -17,7 +17,7 @@ limitations under the License.
 /* tslint:disable:no-string-literal */
 
 import fs = require('fs');
-import { Configurator, IConfig, Initializer, Microservice } from './microservice';
+import { Configurator, IConfig, Initializer, Microservice } from '.';
 
 jest.mock('fs');
 

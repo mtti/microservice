@@ -14,7 +14,7 @@
     "build": "tsc",
     "test": "npm run lint && npm run jest:ts && npm run jest:js",
     "lint": "npm run lint:ts && npm run lint:js",
-    "lint:js": "eslint \"src/**/*.test.js\"",
+    "lint:js": "eslint \"src/**/*.spec.js\"",
     "lint:ts": "tslint 'src/**/*.ts'",
     "jest:js": "jest --config ./jest.config.js.json",
     "jest:ts": "jest --config ./jest.config.ts.json",

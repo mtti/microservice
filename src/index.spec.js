@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 const fs = require('fs');
-const { Microservice } = require('../dist/microservice');
+const { Microservice } = require('../dist');
 
 jest.mock('fs');
 
