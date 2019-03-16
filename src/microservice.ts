@@ -174,4 +174,4 @@ class Microservice {
   }
 }
 
-module.exports = Microservice;
+export { Microservice, Configurator, Initializer, Config, Context, Plugin };

@@ -11,9 +11,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"lib/**/*.js\"",
+    "lint": "eslint \"src/**/*.test.js\"",
     "lint:fix": "eslint --fix \"lib/**/*.js\"",
-    "jest": "jest",
+    "jest:js": "jest --config ./jest.config.js.json",
+    "jest:ts": "jest --config ./jest.config.ts.json",
     "test": "npm run lint && jest",
     "tsc": "tsc"
   },
@@ -21,16 +22,15 @@
     "winston": "3.2.1"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "eslint": "5.15.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.16.0",
     "jest": "24.3.1",
+    "ts-jest": "^24.0.0",
     "typescript": "3.3.3333"
   },
   "files": [
-    "lib"
-  ],
-  "jest": {
-    "collectCoverage": true
-  }
+    "dist"
+  ]
 }

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 const fs = require('fs');
-const Microservice = require('./microservice');
+const { Microservice } = require('../dist/microservice');
 
 jest.mock('fs');
 
@@ -158,7 +158,7 @@ describe('Microservice', () => {
       });
 
       it('calls fs.readFileSync with file path', () => {
-        expect(fs.readFileSync).toHaveBeenCalledWith('/path/to/config.json');
+        expect(fs.readFileSync).toHaveBeenCalledWith('/path/to/config.json', 'utf8');
       });
 
       it('returns new object', () => {
