@@ -1,6 +1,8 @@
 [![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice) [![Build Status](https://travis-ci.org/mtti/node-microservice.svg?branch=master)](https://travis-ci.org/mtti/node-microservice) [![Greenkeeper badge](https://badges.greenkeeper.io/mtti/node-microservice.svg)](https://greenkeeper.io/)
 
-Simple microservice framework designed to reduce the amount of boilerplate required when creating several similar Node.js daemons. This is accomplished by establishing some simple conventions on how different components of an application are configured and initialized. This allows commonly shared components (connections to databases, message queues etc.) to be implemented as reusable plugin modules.
+Minimalistic framework that allows you to implement boilerplate initialization code as reusable modules. Useful if you're developing multiple small projects with similar external dependencies to databases, message queues or external services. Such as when working with a microservice architecture.
+
+Instead of copy-pasting identical code for starting database connectors and mapping environment variables to configuration dictionaries into each of your services, put those into @mtti/microservice plugins and use the same code in all fo them.
 
 ## Installation
 
@@ -67,10 +69,10 @@ In practice, a plugin module might look something like this:
 // plugin.js
 
 module.exports = {
-    config: (config) => {
+    config: async (config) => {
         // add code here
     },
-    init: (context) => {
+    init: async (context) => {
         // add code here too
     },
 };
