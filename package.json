@@ -12,29 +12,22 @@
   "scripts": {
     "setup": "npm install",
     "build": "tsc",
-    "test": "npm run lint && npm run jest:ts && npm run jest:js",
-    "lint": "npm run lint:ts && npm run lint:js",
-    "lint:js": "eslint 'src/**/*.spec.js' 'integration-tests/**/*.js'",
-    "lint:ts": "tslint 'src/**/*.ts'",
-    "jest:js": "jest --config ./jest.config.js.json",
-    "jest:ts": "jest --config ./jest.config.ts.json",
+    "test": "npm run jest",
+    "jest": "jest --config ./jest.config.json",
     "tsc": "tsc",
-    "tslint": "tslint",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
-    "winston": "3.2.1"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/jest": "24.0.11",
-    "eslint": "5.15.2",
-    "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "2.16.0",
-    "jest": "24.5.0",
-    "ts-jest": "24.0.0",
-    "tslint": "5.14.0",
-    "typescript": "3.3.3333"
+    "@types/jest": "24.0.18",
+    "@types/node": "^12.7.2",
+    "eslint": "6.2.2",
+    "jest": "24.9.0",
+    "ts-jest": "24.0.2",
+    "typescript": "3.5.3"
   },
   "files": [
     "dist"
