@@ -18,39 +18,44 @@ import fs = require('fs');
 import path = require('path');
 import winston = require('winston');
 
-export type Configurator = (config: IConfig) => Promise<IConfig>;
+export type Configurator = (config: Config) => Promise<Config>;
 
-export type Initializer = (context: IContext) => Promise<void>;
+export type Initializer = (context: Config) => Promise<void>;
 
-export interface IConfig {
+export interface Config {
   [propName: string]: any;
 }
 
-export interface IPlugin {
+export interface Plugin {
   config?: Configurator;
   init?: Initializer;
 }
 
-export interface IContext {
-  config: IConfig;
+export interface Context {
+  config: Config;
   [propName: string]: any;
 }
 
 export class Microservice {
   /** Create a configuration callback which adds all options from an object. */
-  private static _createObjectConfigurator(options: IConfig) {
-    return async (config: IConfig) => ({ ...config, ...options });
+  private static _createObjectConfigurator(options: Config): Configurator {
+    return async (config: Config): Promise<Config> =>
+      ({ ...config, ...options });
   }
 
   /** Create a configuration callback which adds a single key-value pair. */
-  private static _createPairConfigurator(key: string, value: any) {
-    return async (config: IConfig) => ({ ...config, [key]: value });
+  private static _createPairConfigurator(
+    key: string,
+    value: any
+  ): Configurator {
+    return async (config: Config): Promise<Config> =>
+      ({ ...config, [key]: value });
   }
 
   public name: string;
   private _configurationCallbacks: Configurator[];
   private _initializationCallbacks: Initializer[];
-  private _context: IContext;
+  private _context: Context;
 
   constructor(name: string) {
     this.name = name;
@@ -77,7 +82,7 @@ export class Microservice {
   }
 
   /** Add a plugin. */
-  public use(plugin: IPlugin): Microservice {
+  public use(plugin: Plugin): Microservice {
     if (plugin.config) {
       this.config(plugin.config);
     }
@@ -88,7 +93,10 @@ export class Microservice {
   }
 
   /** Add a configurator. */
-  public config(key: Configurator | string | IConfig, value?: string): Microservice {
+  public config(
+    key: Configurator | string | Config,
+    value?: string
+  ): Microservice {
     if (typeof (key) === 'function') {
       this._configurationCallbacks.push(key as Configurator);
     } else if (typeof (key) === 'string') {
@@ -110,7 +118,7 @@ export class Microservice {
   }
 
   /** Start the microservice. */
-  public async start(): Promise<IContext> {
+  public async start(): Promise<Context> {
     try {
       await this._executeConfigurators();
       await this._executeInitializers();
@@ -124,7 +132,7 @@ export class Microservice {
 
   /** Create a configuration callback which loads options from a file. */
   private _createFileConfigurator(filename: string): Configurator {
-    return async (config: IConfig) => {
+    return async (config: Config): Promise<Config> => {
       const absolutePath = path.resolve(filename);
       let options;
       if (filename.endsWith('.json')) {

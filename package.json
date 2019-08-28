@@ -10,20 +10,24 @@
   "repository": "github:mtti/node-microservice",
   "main": "dist/index.js",
   "scripts": {
-    "setup": "npm install",
     "build": "tsc",
-    "test": "npm run jest",
     "jest": "jest --config ./jest.config.json",
-    "tsc": "tsc",
+    "lint": "eslint 'src/**/*.ts'",
+    "lint:fix": "eslint --fix 'src/**/*.ts'",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run test",
+    "setup": "npm install",
+    "test": "npm run lint && npm run jest",
+    "tsc": "tsc"
   },
   "dependencies": {
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/jest": "24.0.18",
-    "@types/node": "^12.7.2",
+    "@types/node": "12.7.2",
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
     "eslint": "6.2.2",
     "jest": "24.9.0",
     "ts-jest": "24.0.2",

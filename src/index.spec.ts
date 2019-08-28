@@ -17,7 +17,7 @@ limitations under the License.
 /* tslint:disable:no-string-literal */
 
 import fs = require('fs');
-import { Configurator, IConfig, IContext, Initializer, Microservice } from '.';
+import { Config, Configurator, Context, Initializer, Microservice } from '.';
 
 jest.mock('fs');
 
@@ -106,7 +106,7 @@ describe('Microservice', () => {
   });
 
   describe('start()', () => {
-    let result: IContext;
+    let result: Context;
 
     beforeEach(async () => {
       result = await service.start();
@@ -130,7 +130,7 @@ describe('Microservice', () => {
       thirdKey: 'newThirdValue',
     };
 
-    let result: IConfig;
+    let result: Config;
     let error: Error | null;
 
     beforeEach(() => {
@@ -193,8 +193,8 @@ describe('Microservice', () => {
 
   describe('_executeConfigurator()', () => {
     let callback: Configurator;
-    let oldConfig: IConfig;
-    let newConfig: IConfig;
+    let oldConfig: Config;
+    let newConfig: Config;
     let error: Error;
 
     beforeEach(() => {
@@ -261,11 +261,15 @@ describe('Microservice', () => {
     beforeEach(() => {
       error = null;
 
-      const createConfigurator = (result: IConfig) => async (config: IConfig) => ({ ...config, ...result });
+      const createConfigurator = (result: Config) =>
+        async (config: Config): Promise<Config> => ({ ...config, ...result });
       callbacks = [
         jest.fn(createConfigurator({ first: 'firstValue' })),
         jest.fn(createConfigurator({ second: 'secondValue' })),
-        jest.fn(createConfigurator({ third: 'thirdValue', second: 'overriddenValue' })),
+        jest.fn(createConfigurator({
+          third: 'thirdValue',
+          second: 'overriddenValue'
+        })),
       ];
     });
 
@@ -276,7 +280,8 @@ describe('Microservice', () => {
       });
 
       test('each configurator was called once', () => {
-        callbacks.forEach((callback) => expect(callback).toHaveBeenCalledTimes(1));
+        callbacks.forEach((callback) =>
+          expect(callback).toHaveBeenCalledTimes(1));
       });
 
       test('first option has its initial value', () => {
@@ -319,7 +324,7 @@ describe('Microservice', () => {
   });
 
   describe('_executeInitializer()', () => {
-    const fakePromise = { then: () => null };
+    const fakePromise = { then: (): null => null };
     let callback: Initializer;
     let result: Promise<void>;
     let error: Error;
@@ -379,7 +384,8 @@ describe('Microservice', () => {
     beforeEach(() => service['_executeInitializers']());
 
     test('each initializer was called once', () => {
-      callbacks.forEach((callback) => expect(callback).toHaveBeenCalledTimes(1));
+      callbacks.forEach((callback) =>
+        expect(callback).toHaveBeenCalledTimes(1));
     });
   });
 });
