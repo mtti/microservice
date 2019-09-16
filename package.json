@@ -1,10 +1,10 @@
 {
   "name": "@mtti/microservice",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=10.15.0"
   },
-  "version": "0.4.0",
-  "description": "Minimalistic modular microservice framework",
+  "version": "0.5.0",
+  "description": "Microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
   "repository": "github:mtti/node-microservice",
@@ -18,9 +18,12 @@
     "prepublishOnly": "npm run test",
     "setup": "npm install",
     "test": "npm run lint && npm run jest",
+    "test:docker": "docker build -f ./Dockerfile-test -t ts-test . && docker run --rm -it ts-test",
     "tsc": "tsc"
   },
   "dependencies": {
+    "@mtti/configs": "mtti/configs",
+    "@mtti/deps": "^0.2.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -29,6 +32,8 @@
     "@typescript-eslint/eslint-plugin": "2.2.0",
     "@typescript-eslint/parser": "2.2.0",
     "eslint": "6.4.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.18.2",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
     "typescript": "3.6.3"
