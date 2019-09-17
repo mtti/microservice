@@ -1,11 +1,17 @@
 [![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice) [![Build Status](https://travis-ci.org/mtti/node-microservice.svg?branch=master)](https://travis-ci.org/mtti/node-microservice)
 
-Opinionated microframework for backend TypeScript applications.
+Opinionated microframework for backend TypeScript applications. In early stages of development.
 
 This project is the core of my *microservice suite*, consisting of:
 * [@mtti/apiserver]() RESTful JSON API library
 * [@mtti/configs]() application configuration management library
 * [@mtti/deps]() an AngularJS style dependency injection container
+
+## Installation
+
+```
+npm install --save @mtti/microservice
+```
 
 ## Usage example
 
@@ -113,12 +119,6 @@ injectFunction([connectToRedis], main);
 
 start(main, configs);
 
-```
-
-## Installation
-
-```
-npm install --save @mtti/microservice
 ```
 
 ## License
