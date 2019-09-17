@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice) [![Build Status](https://travis-ci.org/mtti/node-microservice.svg?branch=master)](https://travis-ci.org/mtti/node-microservice) [![Greenkeeper badge](https://badges.greenkeeper.io/mtti/node-microservice.svg)](https://greenkeeper.io/)
+[![npm version](https://badge.fury.io/js/%40mtti%2Fmicroservice.svg)](https://badge.fury.io/js/%40mtti%2Fmicroservice) [![Build Status](https://travis-ci.org/mtti/node-microservice.svg?branch=master)](https://travis-ci.org/mtti/node-microservice)
 
 Minimalistic framework that allows you to implement boilerplate initialization code as reusable modules. Useful if you're developing multiple small projects with similar external dependencies to databases, message queues or external services. Such as when working with a microservice architecture.
 
