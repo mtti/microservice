@@ -72,7 +72,7 @@ You can instead use the `redisUrl` configuration option to create a Redis client
 import Redis = require('ioredis');
 import winston from 'winston';
 import { Configs, getConfigs } from '@mtti/configs';
-import { start, logger as loggerType } from '@mtti/microservice';
+import { createLogger, start } from '@mtti/microservice';
 
 // Define configuration options
 
@@ -106,7 +106,7 @@ async function connectToRedis({ redisUrl }: RedisConfigs, logger: winston.Logger
 
     return redisCl;
 }
-injectFunction([getConfigs(['redisUrl']), loggerType], connectToRedis);
+injectFunction([getConfigs(['redisUrl']), createLogger], connectToRedis);
 
 // Main function
 

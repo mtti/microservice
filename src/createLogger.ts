@@ -2,7 +2,7 @@ import { Configs } from '@mtti/configs';
 import { injectFunction } from '@mtti/deps';
 import winston from 'winston';
 
-export async function logger(configs: Configs): Promise<winston.Logger> {
+export async function createLogger(configs: Configs): Promise<winston.Logger> {
   let level = 'debug';
   let silent = false;
   if (process.env.NODE_ENV === 'production') {
@@ -28,4 +28,4 @@ export async function logger(configs: Configs): Promise<winston.Logger> {
     exitOnError: false,
   });
 }
-injectFunction([Configs], logger);
+injectFunction([Configs], createLogger);

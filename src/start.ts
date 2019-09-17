@@ -1,6 +1,6 @@
 import { Configs } from '@mtti/configs';
+import { createLogger } from './createLogger';
 import { handleProcessEvents } from './handleProcessEvents';
-import { logger as loggerType } from './logger';
 import path from 'path';
 import winston from 'winston';
 import { DependencyKey, injectFunction, Injector } from '@mtti/deps';
@@ -16,7 +16,7 @@ async function main(
     await injector.resolve(app);
   };
 }
-injectFunction([loggerType], main);
+injectFunction([createLogger], main);
 
 /**
  * Start the microservice.
