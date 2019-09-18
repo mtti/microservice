@@ -1,9 +1,9 @@
-import { Configs } from '@mtti/configs';
-import { createLogger } from './createLogger';
-import { handleProcessEvents } from './handleProcessEvents';
 import path from 'path';
 import winston from 'winston';
 import { DependencyKey, injectFunction, Injector } from '@mtti/deps';
+import { Configs } from '@mtti/configs';
+import { createLogger } from './createLogger';
+import { handleProcessEvents } from './handleProcessEvents';
 
 async function main(
   logger: winston.Logger,
