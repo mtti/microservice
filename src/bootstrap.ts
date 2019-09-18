@@ -8,14 +8,13 @@ import { handleProcessEvents } from './handleProcessEvents';
  * @param app Application's injectable main function
  * @param configs Optional configuration options container
  */
-export async function bootstrap(configs?: Configs): Promise<void> {
+export async function bootstrap(configs: Configs): Promise<void> {
   handleProcessEvents();
 
-  const cfg = configs || new Configs();
-  cfg.setEnv(process.env);
+  configs.setEnv(process.env);
 
   const env = process.env.NODE_ENV || 'development';
-  const configPath = cfg.has('configPath') ? cfg.get('configPath') as string : path.join(process.cwd(), 'config');
-  await cfg.tryFile(path.join(configPath, 'common.yml'));
-  await cfg.tryFile(path.join(configPath, `${env}.yml`));
+  const configPath = configs.has('configPath') ? configs.get('configPath') as string : path.join(process.cwd(), 'config');
+  await configs.tryFile(path.join(configPath, 'common.yml'));
+  await configs.tryFile(path.join(configPath, `${env}.yml`));
 }

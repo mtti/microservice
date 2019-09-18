@@ -4,12 +4,12 @@ export function handleProcessEvents(): void {
   process.on('unhandledRejection', (reason) => {
     if (reason) {
       if (reason instanceof Error && reason.stack) {
-        logger.error(reason.stack);
+        logger.error(`Unhandled rejection: ${reason.stack}`);
       } else {
         try {
-          logger.error(JSON.stringify(reason));
+          logger.error(`Unhandled rejection: ${JSON.stringify(reason)}`);
         } catch (err) {
-          logger.error(reason);
+          logger.error(`Unhandled rejection: ${reason}`);
         }
       }
     } else {
