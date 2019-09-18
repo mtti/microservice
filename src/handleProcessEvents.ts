@@ -1,6 +1,6 @@
-import winston from 'winston';
+import { logger } from './logger';
 
-export function handleProcessEvents(logger: winston.Logger): void {
+export function handleProcessEvents(): void {
   process.on('unhandledRejection', (reason) => {
     if (reason) {
       if (reason instanceof Error && reason.stack) {
