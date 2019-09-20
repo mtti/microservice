@@ -26,7 +26,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@mtti/eslint-config-typescript": "mtti/eslint-config-typescript",
+    "@mtti/eslint-config-typescript": "^1.0.0",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.5",
     "@typescript-eslint/eslint-plugin": "2.2.0",
