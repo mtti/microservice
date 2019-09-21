@@ -1,6 +1,6 @@
-import path from 'path';
 import { Configs } from '@mtti/configs';
 import { handleProcessEvents } from './handleProcessEvents';
+import { logger } from './logger';
 
 /**
  * Start the microservice.
@@ -11,10 +11,9 @@ import { handleProcessEvents } from './handleProcessEvents';
 export async function bootstrap(configs: Configs): Promise<void> {
   handleProcessEvents();
 
-  configs.setEnv(process.env);
+  configs.on('loadFromFile', (file: string) => {
+    logger.info(`Loaded configuration file: ${file}`);
+  });
 
-  const env = process.env.NODE_ENV || 'development';
-  const configPath = configs.has('configPath') ? configs.get('configPath') as string : path.join(process.cwd(), 'config');
-  await configs.tryFile(path.join(configPath, 'common.yml'));
-  await configs.tryFile(path.join(configPath, `${env}.yml`));
+  await configs.loadFromProcess();
 }
