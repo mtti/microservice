@@ -1,39 +1,46 @@
 {
   "name": "@mtti/microservice",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=10.15.0"
   },
-  "version": "0.4.0",
-  "description": "Minimalistic modular microservice framework",
+  "version": "0.5.0",
+  "description": "Microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
-  "repository": "github:mtti/node-microservice",
+  "repository": "github:mtti/microservice",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "jest": "jest --config ./jest.config.json",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint --fix 'src/**/*.ts'",
-    "prepare": "npm run build",
+    "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run test",
     "setup": "npm install",
-    "test": "npm run lint && npm run jest",
-    "tsc": "tsc"
+    "test": "npm run lint",
+    "test:docker": "docker build -f ./Dockerfile-test -t ts-test . && docker run --rm -it ts-test",
+    "tsc": "tsc",
+    "clean": "rm -rf ./dist"
   },
   "dependencies": {
+    "@mtti/configs": "^0.1.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@mtti/eslint-config-typescript": "1.0.0",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.5",
     "@typescript-eslint/eslint-plugin": "2.2.0",
     "@typescript-eslint/parser": "2.2.0",
     "eslint": "6.4.0",
+    "eslint-plugin-import": "2.18.2",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
     "typescript": "3.6.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "!dist/*.spec.js",
+    "!dist/*.spec.d.ts"
   ]
 }
