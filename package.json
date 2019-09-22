@@ -14,12 +14,13 @@
     "jest": "jest --config ./jest.config.json",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint --fix 'src/**/*.ts'",
-    "prepare": "npm run build",
+    "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run test",
     "setup": "npm install",
     "test": "npm run lint",
     "test:docker": "docker build -f ./Dockerfile-test -t ts-test . && docker run --rm -it ts-test",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "clean": "rm -rf ./dist"
   },
   "dependencies": {
     "@mtti/configs": "^0.1.1",
