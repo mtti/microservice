@@ -7,7 +7,7 @@
   "description": "Microservice framework",
   "author": "Matti Hiltunen",
   "license": "Apache-2.0",
-  "repository": "github:mtti/node-microservice",
+  "repository": "github:mtti/microservice",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
