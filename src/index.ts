@@ -1,3 +1,3 @@
 export * from './bootstrap';
 export * from './handleProcessEvents';
-export * from './logger';
+export * from './createLogger';

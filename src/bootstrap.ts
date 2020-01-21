@@ -1,6 +1,6 @@
 import { Configs } from '@mtti/configs';
+import { Logger } from 'winston';
 import { handleProcessEvents } from './handleProcessEvents';
-import { logger } from './logger';
 
 /**
  * Start the microservice.
@@ -8,12 +8,16 @@ import { logger } from './logger';
  * @param app Application's injectable main function
  * @param configs Optional configuration options container
  */
-export async function bootstrap(configs: Configs): Promise<void> {
-  handleProcessEvents();
+export const bootstrap = async (
+  logger: Logger,
+  configs?: Configs,
+): Promise<void> => {
+  handleProcessEvents(logger);
 
-  configs.on('loadFromFile', (file: string) => {
-    logger.info(`Loaded configuration file: ${file}`);
-  });
-
-  await configs.loadFromProcess();
-}
+  if (configs) {
+    configs.on('loadFromFile', (file: string) => {
+      logger.info(`Loaded configuration file: ${file}`);
+    });
+    await configs.loadFromProcess();
+  }
+};
